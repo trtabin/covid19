@@ -1,14 +1,10 @@
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 
-export default function Header(){
+export default function Header({props}){
     return(
         <View style={styles.container}>
-            <Text style={styles.header}>Covid-19 Statistics</Text>
-            {/* <View style={styles.footer}>
-                <Text style={styles.tab}>Today</Text>
-                <Text style={styles.tab}>Total</Text>
-            </View> */}
+            <Text style={styles.header}>{props.header}</Text>
         </View>
     )
 }

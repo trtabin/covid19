@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, ScrollView, StyleSheet, View, Text, Dimensions } from "react-native";
 
-import Header from "./Header";
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-export default function Body(){
+export default function Country({ route, navigation }){
     const [data,setData] = useState([{}]);
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState();
 
+    // Country Name 
+    const { countryName } = route.params;
+    let address = "https://coronavirus-19-api.herokuapp.com/countries/" + countryName;
     useEffect(()=> {
-        fetch("https://coronavirus-19-api.herokuapp.com/countries")
+        fetch(address)
         .then(response => response.json())
         .then(
             (result) => {
@@ -42,45 +44,58 @@ export default function Body(){
 
     else{
     return(
-        <ScrollView>
-            <Header props={{header:"Covid-19 Statistics"}} />
-            <Text style={{fontSize:25, fontWeight:"bold", paddingLeft:10, marginTop:25,}}>Global Data</Text>
+        <ScrollView style={{backgroundColor:"#fff"}}>
+            <Text style={{fontSize:25, fontWeight:"bold", paddingLeft:10, marginTop:25,}}>{data.country}</Text>
+            <Text style={{fontSize:20, fontWeight:"bold", paddingLeft:10, marginTop:25,}}>Todays Data</Text>
+            <View style={styles.container}>
+                <View style={styles.subContainer}>
+                    <View style={styles.active}>
+                        <Text style={{color:'#687089'}}>Todays Cases</Text>
+                        <Text style={{textAlign:"right", color:'#303139', fontSize:18,fontWeight:'bold'}}>{data.todayCases}</Text>
+                    </View>
+                    <View style={styles.active}>
+                        <Text style={{color:'#687089'}}>Active Cases</Text>
+                        <Text style={{textAlign:"right", color:'#303139', fontSize:18,fontWeight:'bold'}}>{data.active}</Text>
+                    </View>
+                </View>
+
+                <View style={styles.subContainer}>
+                    <View style={styles.active}>
+                        <Text style={{color:'#687089'}}>Critical</Text>
+                        <Text style={{textAlign:"right", color:'#303139', fontSize:18,fontWeight:'bold'}}>{data.critical}</Text>
+                    </View>
+                    <View style={styles.active}>
+                        <Text style={{color:'#687089'}}>Todays Death</Text>
+                        <Text style={{textAlign:"right", color:'#303139', fontSize:18,fontWeight:'bold'}}>{data.todayDeaths}</Text>
+                    </View>
+                </View>
+            </View>
+
+            <Text style={{fontSize:20, fontWeight:"bold", paddingLeft:10, marginTop:25,}}>Total Data</Text>
             <View style={styles.container}>
                 <View style={styles.subContainer}>
                     <View style={styles.active}>
                         <Text style={{color:'#687089'}}>Total Cases</Text>
-                        <Text style={{textAlign:"right", color:'#303139', fontSize:18,fontWeight:'bold'}}>{data[0].cases/1000000}M</Text>
+                        <Text style={{textAlign:"right", color:'#303139', fontSize:18,fontWeight:'bold'}}>{data.cases/1000000}M</Text>
                     </View>
                     <View style={styles.active}>
-                        <Text style={{color:'#687089'}}>Active Cases</Text>
-                        <Text style={{textAlign:"right", color:'#303139', fontSize:18,fontWeight:'bold'}}>{data[0].active/1000000}M</Text>
+                        <Text style={{color:'#687089'}}>Cases Per OneMillion</Text>
+                        <Text style={{textAlign:"right", color:'#303139', fontSize:18,fontWeight:'bold'}}>{data.casesPerOneMillion}</Text>
                     </View>
                 </View>
 
                 <View style={styles.subContainer}>
                     <View style={styles.active}>
                         <Text style={{color:'#687089'}}>Recovered</Text>
-                        <Text style={{textAlign:"right", color:'#303139', fontSize:18,fontWeight:'bold'}}>{data[0].recovered/1000000}M</Text>
+                        <Text style={{textAlign:"right", color:'#303139', fontSize:18,fontWeight:'bold'}}>{data.recovered/1000000}M</Text>
                     </View>
                     <View style={styles.active}>
                         <Text style={{color:'#687089'}}>Death</Text>
-                        <Text style={{textAlign:"right", color:'#303139', fontSize:18,fontWeight:'bold'}}>{data[0].deaths/1000000}M</Text>
+                        <Text style={{textAlign:"right", color:'#303139', fontSize:18,fontWeight:'bold'}}>{data.deaths/1000000}M</Text>
                     </View>
                 </View>
             </View>
 
-            <Text style={{fontSize:25, fontWeight:"bold", paddingLeft:10, marginTop:25,}}>Top Countries</Text>
-            <View style={styles.topCountries}>
-                {   
-                    data.map(item => (
-                        <View style={styles.contryContainer} key={item.country}>
-                            <Text style={{fontSize:20,fontWeight:'bold', color:'#151522', marginBottom:10}}>{item.country}</Text>
-                            <Text style={styles.countryData}>Affected - {item.cases/1000000}M</Text>
-                            <Text style={styles.countryData}>Recovered - {item.recovered/1000000}M</Text>
-                        </View>
-                    ))
-                }
-            </View>
         </ScrollView>
     )
     }
