@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, ScrollView, StyleSheet, View, Text, Dimensions } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { StatusBar } from 'expo-status-bar';
 
 import Header from "./Header";
+import TotalData from "./TotalData";
+
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-export default function Body(){
+export default function Body({ navigation }){
     const [data,setData] = useState([{}]);
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState();
@@ -28,60 +32,48 @@ export default function Body(){
 
     if(error) {
         return(
-            <Text>Something Went Wrong</Text>
+            <View style={{flex:1, justifyContent:'center', alignContent:'center'}}>
+                <Text>Something Went Wrong</Text>
+            </View>
         )
     }
 
     else if(!isLoaded){
         return(
-            <View style={{flex:1, justifyContent:'center', alignContent:'center'}}>
+            <View style={{ justifyContent:'center', alignContent:'center'}}>
                 <ActivityIndicator size="large" color="rgb(63, 65, 78)" />
             </View>
         )
     }
 
     else{
+
+    const newData = data.slice(1, 11);
+
     return(
-        <ScrollView>
+        <View style={{marginBottom:100}}>
             <Header props={{header:"Covid-19 Statistics"}} />
-            <Text style={{fontSize:25, fontWeight:"bold", paddingLeft:10, marginTop:25,}}>Global Data</Text>
-            <View style={styles.container}>
-                <View style={styles.subContainer}>
-                    <View style={styles.active}>
-                        <Text style={{color:'#687089'}}>Total Cases</Text>
-                        <Text style={{textAlign:"right", color:'#303139', fontSize:18,fontWeight:'bold'}}>{data[0].cases/1000000}M</Text>
-                    </View>
-                    <View style={styles.active}>
-                        <Text style={{color:'#687089'}}>Active Cases</Text>
-                        <Text style={{textAlign:"right", color:'#303139', fontSize:18,fontWeight:'bold'}}>{data[0].active/1000000}M</Text>
-                    </View>
-                </View>
+            <ScrollView style={{backgroundColor:'#fff'}}>
+                <Text style={{fontSize:25, fontWeight:"bold", paddingLeft:10, marginTop:25,}}>Global Data</Text>
+                <TotalData data={data[0]} />
 
-                <View style={styles.subContainer}>
-                    <View style={styles.active}>
-                        <Text style={{color:'#687089'}}>Recovered</Text>
-                        <Text style={{textAlign:"right", color:'#303139', fontSize:18,fontWeight:'bold'}}>{data[0].recovered/1000000}M</Text>
-                    </View>
-                    <View style={styles.active}>
-                        <Text style={{color:'#687089'}}>Death</Text>
-                        <Text style={{textAlign:"right", color:'#303139', fontSize:18,fontWeight:'bold'}}>{data[0].deaths/1000000}M</Text>
-                    </View>
+                <Text style={{fontSize:25, fontWeight:"bold", paddingLeft:10, marginTop:25,}}>Top Countries</Text>
+                <View style={styles.topCountries}>
+                    {   
+                        newData.map(item => (
+                            <TouchableOpacity onPress={() => navigation.navigate('Country', { countryName: item.country })}>
+                                <View style={styles.contryContainer} key={item.country}>
+                                    <Text style={{fontSize:20,fontWeight:'bold', color:'#151522', marginBottom:10}}>{item.country}</Text>
+                                    <Text style={styles.countryData}>Affected - {item.cases/1000000}M</Text>
+                                    <Text style={styles.countryData}>Recovered - {item.recovered/1000000}M</Text>
+                                </View>
+                            </TouchableOpacity>
+                        ))
+                    }
                 </View>
-            </View>
-
-            <Text style={{fontSize:25, fontWeight:"bold", paddingLeft:10, marginTop:25,}}>Top Countries</Text>
-            <View style={styles.topCountries}>
-                {   
-                    data.map(item => (
-                        <View style={styles.contryContainer} key={item.country}>
-                            <Text style={{fontSize:20,fontWeight:'bold', color:'#151522', marginBottom:10}}>{item.country}</Text>
-                            <Text style={styles.countryData}>Affected - {item.cases/1000000}M</Text>
-                            <Text style={styles.countryData}>Recovered - {item.recovered/1000000}M</Text>
-                        </View>
-                    ))
-                }
-            </View>
-        </ScrollView>
+            </ScrollView>
+            <StatusBar hidden={true} />
+        </View>
     )
     }
 }

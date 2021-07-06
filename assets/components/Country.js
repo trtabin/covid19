@@ -13,6 +13,7 @@ export default function Country({ route, navigation }){
     // Country Name 
     const { countryName } = route.params;
     let address = "https://coronavirus-19-api.herokuapp.com/countries/" + countryName;
+    
     useEffect(()=> {
         fetch(address)
         .then(response => response.json())
@@ -30,7 +31,9 @@ export default function Country({ route, navigation }){
 
     if(error) {
         return(
-            <Text>Something Went Wrong</Text>
+            <View style={{flex:1, justifyContent:'center', alignContent:'center'}}>
+                <Text>Something Went Wrong</Text>
+            </View>
         )
     }
 
@@ -44,9 +47,9 @@ export default function Country({ route, navigation }){
 
     else{
     return(
-        <ScrollView style={{backgroundColor:"#fff"}}>
+        <ScrollView style={{backgroundColor:"#fff", marginBottom:50}}>
             <Text style={{fontSize:25, fontWeight:"bold", paddingLeft:10, marginTop:25,}}>{data.country}</Text>
-            <Text style={{fontSize:20, fontWeight:"bold", paddingLeft:10, marginTop:25,}}>Todays Data</Text>
+            <Text style={{fontSize:20, paddingLeft:10, marginTop:25,}}>Todays Data</Text>
             <View style={styles.container}>
                 <View style={styles.subContainer}>
                     <View style={styles.active}>
@@ -71,12 +74,13 @@ export default function Country({ route, navigation }){
                 </View>
             </View>
 
-            <Text style={{fontSize:20, fontWeight:"bold", paddingLeft:10, marginTop:25,}}>Total Data</Text>
+            <Text style={{fontSize:20, paddingLeft:10, marginTop:25,}}>Total Data</Text>
+            
             <View style={styles.container}>
                 <View style={styles.subContainer}>
                     <View style={styles.active}>
                         <Text style={{color:'#687089'}}>Total Cases</Text>
-                        <Text style={{textAlign:"right", color:'#303139', fontSize:18,fontWeight:'bold'}}>{data.cases/1000000}M</Text>
+                        <Text style={{textAlign:"right", color:'#303139', fontSize:18,fontWeight:'bold'}}>{(data.cases/1000000).toPrecision(2)}M</Text>
                     </View>
                     <View style={styles.active}>
                         <Text style={{color:'#687089'}}>Cases Per OneMillion</Text>
