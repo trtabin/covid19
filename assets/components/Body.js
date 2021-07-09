@@ -32,7 +32,7 @@ export default function Body({ navigation }){
 
     if(error) {
         return(
-            <View style={{flex:1, justifyContent:'center', alignContent:'center'}}>
+            <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
                 <Text>Something Went Wrong</Text>
             </View>
         )
@@ -40,7 +40,7 @@ export default function Body({ navigation }){
 
     else if(!isLoaded){
         return(
-            <View style={{ justifyContent:'center', alignContent:'center'}}>
+            <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
                 <ActivityIndicator size="large" color="rgb(63, 65, 78)" />
             </View>
         )
@@ -61,13 +61,14 @@ export default function Body({ navigation }){
                 <View style={styles.topCountries}>
                     {   
                         newData.map(item => (
-                            <TouchableOpacity onPress={() => navigation.navigate('Country', { countryName: item.country })}>
-                                <View style={styles.contryContainer} key={item.country}>
+                            // <TouchableOpacity onPress={() => navigation.navigate('CountryData',{ screen: 'Country',params: { countryName: item.country }, })}>
+                            // <TouchableOpacity>
+                                <View style={styles.contryContainer} key={item.cases}>
                                     <Text style={{fontSize:20,fontWeight:'bold', color:'#151522', marginBottom:10}}>{item.country}</Text>
                                     <Text style={styles.countryData}>Affected - {item.cases/1000000}M</Text>
                                     <Text style={styles.countryData}>Recovered - {item.recovered/1000000}M</Text>
                                 </View>
-                            </TouchableOpacity>
+                            // </TouchableOpacity>
                         ))
                     }
                 </View>
